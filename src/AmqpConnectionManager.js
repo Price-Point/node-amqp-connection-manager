@@ -134,11 +134,11 @@ export default class AmqpConnectionManager extends EventEmitter {
             const connectionOptions = url.connectionOptions || this.connectionOptions;
 
             const amqpUrl = urlUtils.parse(urlString);
-            if(amqpUrl.search) {
+            /* if(amqpUrl.search) {
                 amqpUrl.search += `&heartbeat=${this.heartbeatIntervalInSeconds}`;
             } else {
                 amqpUrl.search = `?heartbeat=${this.heartbeatIntervalInSeconds}`;
-            }
+            } */
             const realUrlString = urlUtils.format(amqpUrl);
             winston.error(realUrlString);
             winston.error(JSON.stringify(connectionOptions));
