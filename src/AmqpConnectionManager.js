@@ -5,6 +5,7 @@ import urlUtils from 'url';
 import ChannelWrapper from './ChannelWrapper';
 import { wait } from './helpers';
 import pb from 'promise-breaker';
+import winston from 'winston';
 
 // Default heartbeat time.
 const HEARTBEAT_IN_SECONDS = 5;
@@ -138,8 +139,10 @@ export default class AmqpConnectionManager extends EventEmitter {
             } else {
                 amqpUrl.search = `?heartbeat=${this.heartbeatIntervalInSeconds}`;
             }
-
-            return amqp.connect(urlUtils.format(amqpUrl), connectionOptions)
+            const realUrlString = urlUtils.format(amqpUrl);
+            winston.error(realUrlString);
+            winston.error(JSON.stringify(connectionOptions));
+            return amqp.connect(realUrlString, connectionOptions)
             .then(connection => {
                 this._currentConnection = connection;
 
