@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import amqp from 'amqplib';
-import urlUtils from 'url';
+// import urlUtils from 'url';
 
 import ChannelWrapper from './ChannelWrapper';
 import { wait } from './helpers';
@@ -133,16 +133,16 @@ export default class AmqpConnectionManager extends EventEmitter {
             const urlString = url.url || url;
             const connectionOptions = url.connectionOptions || this.connectionOptions;
 
-            const amqpUrl = urlUtils.parse(urlString);
+            //const amqpUrl = urlUtils.parse(urlString);
             /* if(amqpUrl.search) {
                 amqpUrl.search += `&heartbeat=${this.heartbeatIntervalInSeconds}`;
             } else {
                 amqpUrl.search = `?heartbeat=${this.heartbeatIntervalInSeconds}`;
             } */
-            const realUrlString = urlUtils.format(amqpUrl);
-            winston.error(realUrlString);
+            //const realUrlString = urlUtils.format(amqpUrl);
+            winston.error(urlString);
             winston.error(JSON.stringify(connectionOptions));
-            return amqp.connect(realUrlString, connectionOptions)
+            return amqp.connect(urlString, connectionOptions)
             .then(connection => {
                 this._currentConnection = connection;
 
@@ -176,10 +176,9 @@ export default class AmqpConnectionManager extends EventEmitter {
             });
         })
         .catch(err => {
-            const amqpURL = urlUtils.parse(this._urls[0]);
-            const formattedURL = urlUtils.format(amqpURL);
+            const amqpURLs = this._urls;
             const ops = this.connectionOptions;
-            this.emit('disconnect', { amqpURL, formattedURL, ops, err });
+            this.emit('disconnect', { amqpURLs, ops, err });
 
             // Connection failed...
             this._currentConnection = null;
