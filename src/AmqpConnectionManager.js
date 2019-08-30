@@ -176,7 +176,9 @@ export default class AmqpConnectionManager extends EventEmitter {
             });
         })
         .catch(err => {
-            this.emit('disconnect', { err });
+            const amqpURL = urlUtils.format(this._urls[0]);
+            const ops = this.connectionOptions;
+            this.emit('disconnect', { amqpURL, ops, err });
 
             // Connection failed...
             this._currentConnection = null;
